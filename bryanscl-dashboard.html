@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BryanSCL // DEV TERMINAL</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --black: #020408;
+    --deep: #050d18;
+    --blue-dark: #041428;
+    --blue-mid: #0a2a50;
+    --blue: #0d5aff;
+    --blue-bright: #1a8fff;
+    --cyan: #00d4ff;
+    --cyan-dim: #00aacc44;
+    --glow: #0d5aff88;
+    --text: #c8e8ff;
+    --text-dim: #4a7aaa;
+    --white: #e8f4ff;
+    --glitch-1: #ff003c;
+    --glitch-2: #00fff9;
+    --grid: #0a2a5022;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ── SCANLINES OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+    animation: scanMove 8s linear infinite;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes scanMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(4px); }
+  }
+
+  /* ── NOISE TEXTURE ── */
+  .noise {
+    position: fixed;
+    inset: 0;
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /* ── MAIN WRAPPER ── */
+  .wrapper {
+    position: relative;
+    z-index: 10;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--blue-mid);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+  }
+
+  .topbar-left { display: flex; gap: 24px; }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    margin-right: 6px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--cyan); }
+    50% { opacity: 0.3; box-shadow: none; }
+  }
+
+  /* ── HERO HEADER ── */
+  .hero {
+    padding: 60px 0 40px;
+    position: relative;
+  }
+
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    animation: fadeInUp 0.6s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(42px, 8vw, 88px);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    position: relative;
+    display: inline-block;
+    animation: fadeInUp 0.6s 0.1s ease both;
+  }
+
+  .hero-title .username {
+    color: var(--blue);
+    text-shadow:
+      0 0 20px var(--blue),
+      0 0 60px var(--glow);
+    position: relative;
+  }
+
+  .hero-title .username::after {
+    content: 'BryanSCL';
+    position: absolute;
+    inset: 0;
+    color: var(--glitch-1);
+    clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+    transform: translateX(-3px);
+    animation: glitch1 4s infinite;
+    pointer-events: none;
+  }
+
+  .hero-title .username::before {
+    content: 'BryanSCL';
+    position: absolute;
+    inset: 0;
+    color: var(--glitch-2);
+    clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%);
+    transform: translateX(3px);
+    animation: glitch2 4s infinite;
+    pointer-events: none;
+  }
+
+  @keyframes glitch1 {
+    0%, 90%, 100% { transform: translateX(0); opacity: 0; }
+    92% { transform: translateX(-4px); opacity: 0.8; }
+    94% { transform: translateX(2px); opacity: 0.8; }
+    96% { transform: translateX(0); opacity: 0; }
+  }
+
+  @keyframes glitch2 {
+    0%, 91%, 100% { transform: translateX(0); opacity: 0; }
+    93% { transform: translateX(4px); opacity: 0.6; }
+    95% { transform: translateX(-2px); opacity: 0.6; }
+    97% { transform: translateX(0); opacity: 0; }
+  }
+
+  .hero-sub {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--text-dim);
+    margin-top: 20px;
+    letter-spacing: 3px;
+    animation: fadeInUp 0.6s 0.2s ease both;
+  }
+
+  .hero-sub span { color: var(--cyan); }
+
+  /* ── TYPING LINE ── */
+  .typing-line {
+    font-size: 13px;
+    color: var(--cyan);
+    margin-top: 32px;
+    height: 20px;
+    animation: fadeInUp 0.6s 0.3s ease both;
+  }
+
+  .typing-line::after {
+    content: '█';
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display: flex;
+    gap: 2px;
+    margin: 40px 0;
+    animation: fadeInUp 0.6s 0.4s ease both;
+  }
+
+  .stat {
+    flex: 1;
+    background: var(--blue-dark);
+    border: 1px solid var(--blue-mid);
+    border-left: 3px solid var(--blue);
+    padding: 16px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .stat:hover {
+    border-color: var(--cyan);
+    background: #041c3a;
+  }
+
+  .stat::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--blue)08, transparent);
+  }
+
+  .stat-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--cyan);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    margin-top: 6px;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    animation: fadeInUp 0.6s 0.5s ease both;
+  }
+
+  .section-head h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--blue-mid), transparent);
+  }
+
+  /* ── PROJECT GRID ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2px;
+    animation: fadeInUp 0.6s 0.6s ease both;
+  }
+
+  /* ── PROJECT CARD ── */
+  .card {
+    background: var(--deep);
+    border: 1px solid var(--blue-mid);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+    group: true;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--blue);
+    z-index: 2;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--blue)0a 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  /* corner accents */
+  .card-corner {
+    position: absolute;
+    width: 14px; height: 14px;
+    border-color: var(--cyan);
+    border-style: solid;
+    transition: width 0.3s, height 0.3s;
+    z-index: 2;
+  }
+
+  .card:hover .card-corner { width: 20px; height: 20px; }
+
+  .card-corner.tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+  .card-corner.tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+  .card-corner.bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+  .card-corner.br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+  /* scan line on hover */
+  .card-scan {
+    position: absolute;
+    top: -100%;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    transition: none;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .card:hover .card-scan {
+    animation: cardScan 1.5s linear infinite;
+  }
+
+  @keyframes cardScan {
+    0% { top: -2px; }
+    100% { top: 100%; }
+  }
+
+  .card-inner {
+    padding: 28px 28px 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-index {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: var(--blue);
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-index::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--blue-mid);
+  }
+
+  .card-icon {
+    font-size: 36px;
+    margin-bottom: 16px;
+    display: block;
+    filter: drop-shadow(0 0 12px var(--blue));
+    transition: filter 0.3s, transform 0.3s;
+  }
+
+  .card:hover .card-icon {
+    filter: drop-shadow(0 0 20px var(--cyan));
+    transform: scale(1.1);
+  }
+
+  .card-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px var(--glow);
+    letter-spacing: 1px;
+  }
+
+  .card-desc {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-weight: 300;
+    margin-bottom: 24px;
+  }
+
+  /* status badge */
+  .card-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    border: 1px solid;
+    margin-bottom: 24px;
+  }
+
+  .card-status.live {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    background: var(--cyan-dim);
+  }
+
+  .card-status.paused {
+    border-color: #ff9a00;
+    color: #ff9a00;
+    background: #ff9a0011;
+  }
+
+  .status-pip {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse 2s infinite;
+  }
+
+  .card-status.paused .status-pip {
+    animation: none;
+  }
+
+  /* tags */
+  .card-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .tag {
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    background: var(--blue-mid);
+    color: var(--text-dim);
+    border: 1px solid var(--blue-mid);
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .card:hover .tag {
+    color: var(--cyan);
+    border-color: var(--blue);
+  }
+
+  /* CTA button */
+  .card-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: transparent;
+    border: 1px solid var(--blue);
+    color: var(--blue-bright);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+  }
+
+  .card-btn::before {
+    content: '';
+    position: absolute;
+    left: -100%; top: 0; bottom: 0;
+    width: 100%;
+    background: var(--blue);
+    transition: left 0.3s ease;
+    z-index: 0;
+  }
+
+  .card-btn:hover::before { left: 0; }
+
+  .card-btn:hover {
+    color: var(--black);
+    border-color: var(--blue);
+    box-shadow: 0 0 20px var(--glow);
+  }
+
+  .card-btn span, .card-btn svg { position: relative; z-index: 1; }
+
+  .card-btn.disabled {
+    border-color: #ff9a0066;
+    color: #ff9a0088;
+    cursor: not-allowed;
+  }
+
+  .card-btn.disabled::before { display: none; }
+  .card-btn.disabled:hover { color: #ff9a0088; box-shadow: none; }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 1px solid var(--blue-mid);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    animation: fadeInUp 0.6s 0.8s ease both;
+  }
+
+  .footer-brand {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    color: var(--blue);
+    letter-spacing: 3px;
+  }
+
+  /* ── FLOATING PARTICLES ── */
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--blue);
+    border-radius: 50%;
+    animation: floatUp linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.4; }
+    100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+  }
+
+  /* ── CURSOR GLOW ── */
+  .cursor-glow {
+    position: fixed;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--blue)0d 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 3;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s;
+  }
+
+  /* ── GLITCH TEXT utility ── */
+  .glitch-text {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* ── HORIZONTAL RULE ACCENT ── */
+  .hr-accent {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), var(--cyan), var(--blue), transparent);
+    margin: 48px 0;
+    animation: hrPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes hrPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  /* ── ANIMATED INTRO ── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── TERMINAL BLURB ── */
+  .terminal-blurb {
+    background: var(--deep);
+    border: 1px solid var(--blue-mid);
+    border-left: 3px solid var(--cyan);
+    padding: 18px 22px;
+    margin-bottom: 48px;
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    animation: fadeInUp 0.6s 0.35s ease both;
+  }
+
+  .terminal-blurb .prompt { color: var(--cyan); }
+  .terminal-blurb .output { color: var(--text); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .stats-row { flex-direction: column; gap: 2px; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .topbar-left { gap: 12px; }
+    .footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="particles" id="particles"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<div class="wrapper">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <span><span class="status-dot"></span>SYSTEM ONLINE</span>
+      <span>BUILD_ENV: PRODUCTION</span>
+    </div>
+    <div id="clock">--:--:--</div>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-label">// VIBE CODING PORTFOLIO</div>
+    <div class="hero-title">
+      <span class="username">BryanSCL</span><br/>
+      <span style="font-size:0.45em; font-weight:400; letter-spacing:4px; color:var(--text-dim);">DEV TERMINAL</span>
+    </div>
+    <div class="hero-sub">
+      <span>3 PROJECTS</span> &nbsp;·&nbsp; SHIPPED & LIVE &nbsp;·&nbsp; <span>BUILT FROM SCRATCH</span>
+    </div>
+    <div class="typing-line" id="typingLine"></div>
+  </header>
+
+  <!-- TERMINAL BLURB -->
+  <div class="terminal-blurb">
+    <div><span class="prompt">$ </span><span class="output">whoami</span></div>
+    <div><span class="prompt">→ </span><span class="output">BryanSCL — vibe coder, builder, deployer of things that matter.</span></div>
+    <div style="margin-top:6px"><span class="prompt">$ </span><span class="output">ls ./projects</span></div>
+    <div><span class="prompt">→ </span><span class="output">sedentary-check &nbsp; bite-right &nbsp; height-sense</span></div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-val">03</div>
+      <div class="stat-label">PROJECTS SHIPPED</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">01</div>
+      <div class="stat-label">LIVE ON VERCEL</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">02</div>
+      <div class="stat-label">DEPLOYED ON NETLIFY</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" id="dayCount">--</div>
+      <div class="stat-label">DAYS IN THE GAME</div>
+    </div>
+  </div>
+
+  <hr class="hr-accent"/>
+
+  <!-- SECTION HEAD -->
+  <div class="section-head">
+    <h2>// PROJECT DIRECTORY</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- PROJECT CARDS -->
+  <div class="projects-grid">
+
+    <!-- CARD 1: Sedentary Check -->
+    <div class="card">
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+      <div class="card-scan"></div>
+      <div class="card-inner">
+        <div class="card-index">PROJECT_001 // WELLNESS</div>
+        <span class="card-icon">🪑</span>
+        <div class="card-title">Sedentary Check</div>
+        <div class="card-status live">
+          <span class="status-pip"></span>
+          LIVE — VERCEL
+        </div>
+        <div class="card-desc">
+          A short guided check-in on your every-day sitting habits. Helps you pause, reflect, and build awareness around your sedentary lifestyle.
+        </div>
+        <div class="card-tags">
+          <span class="tag">WELLNESS</span>
+          <span class="tag">CHECK-IN</span>
+          <span class="tag">VERCEL</span>
+        </div>
+        <a href="https://sedentarycheck.vercel.app/" target="_blank" class="card-btn">
+          <span>LAUNCH PROJECT</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- CARD 2: Bite Right -->
+    <div class="card">
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+      <div class="card-scan"></div>
+      <div class="card-inner">
+        <div class="card-index">PROJECT_002 // EDUGAME</div>
+        <span class="card-icon">🍎</span>
+        <div class="card-title">Bite Right</div>
+        <div class="card-status paused">
+          <span class="status-pip"></span>
+          PAUSED — NETLIFY
+        </div>
+        <div class="card-desc">
+          An interactive browser game that turns everyday nutrition choices into engaging learning content. Play your way to better food knowledge.
+        </div>
+        <div class="card-tags">
+          <span class="tag">GAME</span>
+          <span class="tag">NUTRITION</span>
+          <span class="tag">NETLIFY</span>
+        </div>
+        <a href="https://biterights.netlify.app/" target="_blank" class="card-btn disabled">
+          <span>TEMPORARILY OFFLINE</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-7v-5m0 8v-1"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- CARD 3: Height Sense -->
+    <div class="card">
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+      <div class="card-scan"></div>
+      <div class="card-inner">
+        <div class="card-index">PROJECT_003 // SAFETY</div>
+        <span class="card-icon">🏗️</span>
+        <div class="card-title">Height Sense</div>
+        <div class="card-status paused">
+          <span class="status-pip"></span>
+          PAUSED — NETLIFY
+        </div>
+        <div class="card-desc">
+          A browser quiz aimed at raising awareness on WAH (Working at Heights) safety. Educates users on critical safety protocols in an accessible format.
+        </div>
+        <div class="card-tags">
+          <span class="tag">SAFETY</span>
+          <span class="tag">QUIZ</span>
+          <span class="tag">NETLIFY</span>
+        </div>
+        <a href="https://heightsenses.netlify.app/" target="_blank" class="card-btn disabled">
+          <span>TEMPORARILY OFFLINE</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-7v-5m0 8v-1"/></svg>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-brand">BRYANSCL</div>
+    <div>BUILT WITH INTENT · VIBE CODED · <span id="year"></span></div>
+    <div>SYS_VER 1.0.3</div>
+  </footer>
+
+</div><!-- /wrapper -->
+
+<script>
+  // ── CLOCK ──
+  function updateClock() {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    document.getElementById('clock').textContent =
+      `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // ── YEAR ──
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ── DAYS IN THE GAME (arbitrary start date) ──
+  const start = new Date('2024-12-01');
+  const days = Math.floor((Date.now() - start) / 86400000);
+  document.getElementById('dayCount').textContent = String(days).padStart(2, '0');
+
+  // ── TYPING LINE ──
+  const lines = [
+    '> INITIALISING DEV PORTAL...',
+    '> LOADING PROJECT MANIFEST...',
+    '> 3 BUILDS DETECTED — ALL CATALOGUED.',
+    '> WELCOME BACK, BRYANSCL.'
+  ];
+  let li = 0, ci = 0;
+  const el = document.getElementById('typingLine');
+  function type() {
+    if (li >= lines.length) { el.textContent = lines[lines.length - 1]; return; }
+    if (ci <= lines[li].length) {
+      el.textContent = lines[li].slice(0, ci++);
+      setTimeout(type, 40);
+    } else {
+      setTimeout(() => { li++; ci = 0; type(); }, 1000);
+    }
+  }
+  setTimeout(type, 800);
+
+  // ── PARTICLES ──
+  const pc = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      animation-duration: ${6 + Math.random() * 12}s;
+      animation-delay: ${Math.random() * 10}s;
+      width: ${1 + Math.random() * 2}px;
+      height: ${1 + Math.random() * 2}px;
+      background: ${Math.random() > 0.5 ? 'var(--blue)' : 'var(--cyan)'};
+    `;
+    pc.appendChild(p);
+  }
+
+  // ── CURSOR GLOW ──
+  const glow = document.getElementById('cursorGlow');
+  document.addEventListener('mousemove', e => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  });
+</script>
+</body>
+</html>
